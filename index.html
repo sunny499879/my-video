@@ -10,10 +10,12 @@
     --primary: #2563EB;
     --secondary: #F59E0B;
     --accent: #10B981;
-    --bg: #0F172A;
-    --surface: #1E293B;
-    --text: #F8FAFC;
-    --muted: #94A3B8;
+    --bg: #FFFFFF;
+    --surface: #F1F5F9;
+    --line: #E2E8F0;
+    --text: #0F172A;
+    --muted: #64748B;
+    --eyebrow: #C2410C;
     --radius: 16px;
     --font: "Noto Sans TC", "Microsoft JhengHei", "PingFang TC", system-ui, sans-serif;
   }
@@ -29,7 +31,7 @@
   .wrap { max-width: 960px; margin: 0 auto; padding: 0 16px; }
 
   header { padding: 72px 0 40px; }
-  .eyebrow { color: var(--secondary); font-weight: 700; letter-spacing: .12em; font-size: 14px; }
+  .eyebrow { color: var(--eyebrow); font-weight: 700; letter-spacing: .12em; font-size: 14px; }
   h1 { font-size: clamp(36px, 7vw, 64px); line-height: 1.15; margin: 8px 0 16px; }
   h1 span { color: var(--primary); }
   .lead { color: var(--muted); font-size: 18px; max-width: 36em; margin: 0; }
@@ -39,7 +41,7 @@
     color: var(--text); text-decoration: none; font-size: 15px;
     padding: 8px 16px; border-radius: 999px; background: var(--surface);
   }
-  nav a:hover { background: var(--primary); }
+  nav a:hover { background: var(--primary); color: #fff; }
 
   section { padding: 40px 0; }
   h2 { font-size: 26px; margin: 0 0 20px; }
@@ -51,7 +53,7 @@
   .controls label, .field { display: grid; gap: 6px; font-size: 14px; color: var(--muted); }
   .controls input {
     font: inherit; font-size: 16px; color: var(--text); background: var(--bg);
-    border: 1px solid #334155; border-radius: 10px; padding: 10px 12px; width: 100%;
+    border: 1px solid var(--line); border-radius: 10px; padding: 10px 12px; width: 100%;
   }
   .controls input:focus { outline: 2px solid var(--accent-color, var(--primary)); outline-offset: 1px; border-color: transparent; }
   .seg { display: flex; background: var(--bg); border-radius: 10px; padding: 4px; gap: 4px; }
@@ -59,26 +61,26 @@
     flex: 1; font: inherit; font-size: 14px; color: var(--muted); background: none;
     border: 0; border-radius: 8px; padding: 8px 0; cursor: pointer;
   }
-  .seg button[aria-pressed="true"] { background: var(--surface); color: var(--text); font-weight: 700; }
+  .seg button[aria-pressed="true"] { background: var(--surface); color: var(--text); font-weight: 700; box-shadow: 0 0 0 1px var(--line); }
   .colors { display: flex; gap: 10px; }
   .colors button {
     width: 36px; height: 36px; border-radius: 50%; border: 3px solid transparent;
-    cursor: pointer; box-shadow: 0 0 0 1px #334155;
+    cursor: pointer; box-shadow: 0 0 0 1px var(--line);
   }
   .colors button[aria-pressed="true"] { border-color: var(--text); }
   .actions { display: flex; gap: 8px; flex-wrap: wrap; }
   .btn {
     flex: 1; font: inherit; font-size: 15px; color: var(--text); background: var(--bg);
-    border: 1px solid #334155; border-radius: 10px; padding: 10px 14px; cursor: pointer; white-space: nowrap;
+    border: 1px solid var(--line); border-radius: 10px; padding: 10px 14px; cursor: pointer; white-space: nowrap;
   }
   .btn:hover { border-color: var(--text); }
-  .btn.primary { background: var(--accent-color, var(--primary)); border-color: transparent; font-weight: 700; }
+  .btn.primary { background: var(--accent-color, var(--primary)); color: #fff; border-color: transparent; font-weight: 700; }
   .btn.primary:hover { filter: brightness(1.1); }
 
   .stage-wrap { display: grid; justify-items: center; }
   .stage {
     position: relative; width: 100%; aspect-ratio: 16 / 9; border-radius: var(--radius);
-    background: var(--bg); border: 1px solid var(--surface);
+    background: var(--bg); border: 1px solid var(--line); box-shadow: 0 4px 24px rgba(15, 23, 42, .06);
     overflow: hidden; display: grid; place-items: center; text-align: center;
     container-type: inline-size; transition: max-width .3s ease;
   }
@@ -130,12 +132,32 @@
   .card p { margin: 0; color: var(--muted); font-size: 15px; }
   .ratio { background: var(--bg); border: 2px solid var(--primary); border-radius: 6px; margin-bottom: 14px; }
 
-  footer { padding: 40px 0 64px; color: var(--muted); font-size: 14px; border-top: 1px solid var(--surface); margin-top: 24px; }
+  footer { padding: 40px 0 64px; color: var(--muted); font-size: 14px; border-top: 1px solid var(--line); margin-top: 24px; }
+  footer p { margin: 16px 0 0; }
+
+  /* Logo：直接放在白色背景上 */
+  .brand-logo { height: 44px; width: auto; display: block; margin-bottom: 20px; }
+  .footer-logos { display: flex; align-items: center; gap: 20px; }
+  .footer-logos img { height: 36px; width: auto; display: block; }
+  .divider { width: 1px; align-self: stretch; background: var(--line); }
+
+  .stage-logos {
+    position: absolute; top: 5cqw; left: 50%; transform: translateX(-50%);
+    display: flex; align-items: center; gap: 2cqw;
+  }
+  .stage-logos img { height: 4cqw; width: auto; display: block; }
+  .stage.tall .stage-logos { top: 10cqw; gap: 3.4cqw; }
+  .stage.tall .stage-logos img { height: 8cqw; }
+  .stage.square .stage-logos img { height: 6cqw; }
+  .stage.no-logo .stage-logos { display: none; }
+  .check { display: flex !important; align-items: center; gap: 8px; cursor: pointer; color: var(--text) !important; }
+  .check input { width: 18px; height: 18px; accent-color: var(--accent-color, var(--primary)); }
 </style>
 </head>
 <body>
   <div class="wrap">
     <header>
+      <img src="public/logos/logo-company.png" alt="Furnitech" class="brand-logo">
       <div class="eyebrow">REMOTION 影片專案</div>
       <h1>用程式碼<span>做影片</span></h1>
       <p class="lead">這是我用 Remotion 製作影片的專案。所有影片共用同一套品牌設定，包括顏色、字體、間距和動畫節奏，維持一致的風格。</p>
@@ -174,6 +196,7 @@
               <button type="button" style="background:#10B981" data-color="#10B981" aria-label="強調色" aria-pressed="false"></button>
             </div>
           </div>
+          <label class="check"><input type="checkbox" id="inLogo" checked> 顯示 Logo</label>
           <div class="actions">
             <button type="button" class="btn" id="btnPlay">▶ 重播動畫</button>
             <button type="button" class="btn primary" id="btnDownload">下載圖片</button>
@@ -181,6 +204,11 @@
         </div>
         <div class="stage-wrap">
           <div class="stage" id="stage" role="img" aria-label="影片開場畫面預覽">
+            <div class="stage-logos" id="outLogos">
+              <img src="public/logos/logo-company.png" alt="Furnitech">
+              <span class="divider"></span>
+              <img src="public/logos/logo-maker.png" alt="Hettich">
+            </div>
             <div class="safe">
               <div class="title" id="outTitle">簡潔・現代・專業</div>
               <div class="sub" id="outSub">一個畫面，只講一個重點</div>
@@ -199,7 +227,7 @@
         <div class="swatch"><div class="chip" style="background:#F59E0B"></div><div class="meta"><b>輔助色</b><code>#F59E0B</code></div></div>
         <div class="swatch"><div class="chip" style="background:#10B981"></div><div class="meta"><b>強調色</b><code>#10B981</code></div></div>
         <div class="swatch"><div class="chip" style="background:#0F172A;border-bottom:1px solid #334155"></div><div class="meta"><b>背景</b><code>#0F172A</code></div></div>
-        <div class="swatch"><div class="chip" style="background:#F8FAFC"></div><div class="meta"><b>文字</b><code>#F8FAFC</code></div></div>
+        <div class="swatch"><div class="chip" style="background:#F8FAFC;border-bottom:1px solid #E2E8F0"></div><div class="meta"><b>文字</b><code>#F8FAFC</code></div></div>
       </div>
     </section>
 
@@ -223,7 +251,14 @@
       </div>
     </section>
 
-    <footer>以 Remotion 製作 · 原始碼放在這個 GitHub 儲存庫</footer>
+    <footer>
+      <div class="footer-logos">
+        <img src="public/logos/logo-company.png" alt="Furnitech">
+        <span class="divider"></span>
+        <img src="public/logos/logo-maker.png" alt="Hettich">
+      </div>
+      <p>以 Remotion 製作 · 原始碼放在這個 GitHub 儲存庫</p>
+    </footer>
   </div>
 
 <script>
@@ -280,6 +315,15 @@
   };
   $("btnPlay").addEventListener("click", replay);
 
+  // 顯示 / 隱藏 Logo
+  const inLogo = $("inLogo");
+  inLogo.addEventListener("change", () => stage.classList.toggle("no-logo", !inLogo.checked));
+
+  const logoImgs = [...document.querySelectorAll("#outLogos img")];
+  const loadImg = (img) =>
+    img.complete && img.naturalWidth ? Promise.resolve(img)
+      : new Promise((ok, fail) => { img.onload = () => ok(img); img.onerror = fail; });
+
   // 下載圖片：用 canvas 以實際解析度畫出開場畫面
   const wrapLines = (ctx, text, maxWidth) => {
     const lines = [];
@@ -296,7 +340,7 @@
     return lines;
   };
 
-  $("btnDownload").addEventListener("click", () => {
+  $("btnDownload").addEventListener("click", async () => {
     const { w, h, color } = state;
     const canvas = document.createElement("canvas");
     canvas.width = w;
@@ -308,7 +352,7 @@
     const subSize = Math.round(w * (tall ? 0.046 : square ? 0.036 : 0.026));
     const maxText = w - 96 * 2; // 安全邊距 96px
 
-    ctx.fillStyle = "#0F172A";
+    ctx.fillStyle = "#FFFFFF";
     ctx.fillRect(0, 0, w, h);
     ctx.textAlign = "center";
     ctx.textBaseline = "middle";
@@ -323,7 +367,7 @@
     const total = tLines.length * tLH + barGap * 2 + barH + sLines.length * sLH;
     let y = (h - total) / 2;
 
-    ctx.fillStyle = "#F8FAFC";
+    ctx.fillStyle = "#0F172A";
     ctx.font = `700 ${titleSize}px ${font}`;
     tLines.forEach((l) => { ctx.fillText(l, w / 2, y + tLH / 2); y += tLH; });
 
@@ -334,16 +378,47 @@
     ctx.fill();
     y += barH + barGap;
 
-    ctx.fillStyle = "#94A3B8";
+    ctx.fillStyle = "#64748B";
     ctx.font = `400 ${subSize}px ${font}`;
     sLines.forEach((l) => { ctx.fillText(l, w / 2, y + sLH / 2); y += sLH; });
 
     ctx.fillStyle = color;
     ctx.fillRect(0, h - 8, w, 8);
 
+    // Logo：直接畫在白色背景上，兩個 Logo 中間一條分隔線（比例與預覽一致）
+    if (inLogo.checked) {
+      try {
+        const [imgA, imgB] = await Promise.all(logoImgs.map(loadImg));
+        const k = tall ? 2 : square ? 1.5 : 1; // 與 CSS 的 cqw 倍數一致
+        const lh = w * 0.04 * k;
+        const gap = w * (tall ? 0.034 : 0.02);
+        const wa = imgA.naturalWidth * (lh / imgA.naturalHeight);
+        const wb = imgB.naturalWidth * (lh / imgB.naturalHeight);
+        const lineW = Math.max(1, k);
+        const rowW = wa + gap * 2 + lineW + wb;
+        const by = w * (tall ? 0.10 : 0.05);
+        let x = (w - rowW) / 2;
+        ctx.drawImage(imgA, x, by, wa, lh);
+        x += wa + gap;
+        ctx.fillStyle = "#E2E8F0";
+        ctx.fillRect(x, by, lineW, lh);
+        x += lineW + gap;
+        ctx.drawImage(imgB, x, by, wb, lh);
+      } catch (err) {
+        console.warn("Logo 載入失敗，圖片將不含 Logo", err);
+      }
+    }
+
+    let href;
+    try {
+      href = canvas.toDataURL("image/png");
+    } catch (err) {
+      alert("在本機直接開檔時無法匯出含 Logo 的圖片，請在 GitHub Pages 網址上使用下載功能。");
+      return;
+    }
     const a = document.createElement("a");
     a.download = `title-card-${w}x${h}.png`;
-    a.href = canvas.toDataURL("image/png");
+    a.href = href;
     a.click();
   });
 })();
