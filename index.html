@@ -44,25 +44,65 @@
   section { padding: 40px 0; }
   h2 { font-size: 26px; margin: 0 0 20px; }
 
-  /* 動畫預覽：模擬影片開場 */
+  /* 開場畫面產生器 */
+  .maker { display: grid; grid-template-columns: minmax(0, 300px) minmax(0, 1fr); gap: 24px; align-items: start; }
+  @media (max-width: 720px) { .maker { grid-template-columns: minmax(0, 1fr); } }
+  .controls { background: var(--surface); border-radius: var(--radius); padding: 20px; display: grid; gap: 16px; }
+  .controls label, .field { display: grid; gap: 6px; font-size: 14px; color: var(--muted); }
+  .controls input {
+    font: inherit; font-size: 16px; color: var(--text); background: var(--bg);
+    border: 1px solid #334155; border-radius: 10px; padding: 10px 12px; width: 100%;
+  }
+  .controls input:focus { outline: 2px solid var(--accent-color, var(--primary)); outline-offset: 1px; border-color: transparent; }
+  .seg { display: flex; background: var(--bg); border-radius: 10px; padding: 4px; gap: 4px; }
+  .seg button {
+    flex: 1; font: inherit; font-size: 14px; color: var(--muted); background: none;
+    border: 0; border-radius: 8px; padding: 8px 0; cursor: pointer;
+  }
+  .seg button[aria-pressed="true"] { background: var(--surface); color: var(--text); font-weight: 700; }
+  .colors { display: flex; gap: 10px; }
+  .colors button {
+    width: 36px; height: 36px; border-radius: 50%; border: 3px solid transparent;
+    cursor: pointer; box-shadow: 0 0 0 1px #334155;
+  }
+  .colors button[aria-pressed="true"] { border-color: var(--text); }
+  .actions { display: flex; gap: 8px; flex-wrap: wrap; }
+  .btn {
+    flex: 1; font: inherit; font-size: 15px; color: var(--text); background: var(--bg);
+    border: 1px solid #334155; border-radius: 10px; padding: 10px 14px; cursor: pointer; white-space: nowrap;
+  }
+  .btn:hover { border-color: var(--text); }
+  .btn.primary { background: var(--accent-color, var(--primary)); border-color: transparent; font-weight: 700; }
+  .btn.primary:hover { filter: brightness(1.1); }
+
+  .stage-wrap { display: grid; justify-items: center; }
   .stage {
-    position: relative; aspect-ratio: 16 / 9; border-radius: var(--radius);
+    position: relative; width: 100%; aspect-ratio: 16 / 9; border-radius: var(--radius);
     background: var(--bg); border: 1px solid var(--surface);
     overflow: hidden; display: grid; place-items: center; text-align: center;
+    container-type: inline-size; transition: max-width .3s ease;
   }
+  .stage .safe { padding: 0 5cqw; }
   .stage .bar {
-    position: absolute; left: 0; bottom: 0; height: 4px; background: var(--primary);
+    position: absolute; left: 0; bottom: 0; height: 4px; background: var(--accent-color, var(--primary));
     animation: progress 6s linear infinite;
   }
   .stage .title {
-    font-size: clamp(24px, 6vw, 56px); font-weight: 700; opacity: 0;
-    animation: rise 6s ease-out infinite;
+    font-size: 6.2cqw; font-weight: 700; line-height: 1.25; opacity: 0; color: var(--text);
+    overflow-wrap: anywhere; animation: rise 6s ease-out infinite;
+  }
+  .stage .title::after {
+    content: ""; display: block; width: 12cqw; height: .8cqw; margin: 2.4cqw auto;
+    background: var(--accent-color, var(--primary)); border-radius: 1cqw;
   }
   .stage .sub {
-    color: var(--muted); font-size: clamp(14px, 2.4vw, 22px); opacity: 0;
-    animation: rise 6s ease-out .4s infinite;
+    color: var(--muted); font-size: 2.6cqw; opacity: 0;
+    overflow-wrap: anywhere; animation: rise 6s ease-out .4s infinite;
   }
-  .stage .dot { color: var(--secondary); }
+  .stage.tall .title { font-size: 10cqw; }
+  .stage.tall .sub { font-size: 4.6cqw; }
+  .stage.square .title { font-size: 8cqw; }
+  .stage.square .sub { font-size: 3.6cqw; }
   @keyframes rise {
     0% { opacity: 0; transform: translateY(24px); }
     12%, 80% { opacity: 1; transform: translateY(0); }
@@ -100,7 +140,7 @@
       <h1>用程式碼<span>做影片</span></h1>
       <p class="lead">這是我用 Remotion 製作影片的專案。所有影片共用同一套品牌設定，包括顏色、字體、間距和動畫節奏，維持一致的風格。</p>
       <nav>
-        <a href="#preview">動畫預覽</a>
+        <a href="#preview">開場產生器</a>
         <a href="#colors">品牌顏色</a>
         <a href="#formats">輸出格式</a>
         <a href="#style">風格規則</a>
@@ -108,15 +148,48 @@
     </header>
 
     <section id="preview">
-      <h2>動畫預覽</h2>
-      <div class="stage" role="img" aria-label="影片開場動畫預覽">
-        <div>
-          <div class="title">簡潔<span class="dot">・</span>現代<span class="dot">・</span>專業</div>
-          <div class="sub">一個畫面，只講一個重點</div>
+      <h2>開場畫面產生器</h2>
+      <p class="note" style="margin:-8px 0 20px">輸入文字、選尺寸和顏色，馬上看到影片開場的樣子，也能下載成圖片。</p>
+      <div class="maker">
+        <div class="controls">
+          <label>標題
+            <input id="inTitle" type="text" maxlength="30" value="簡潔・現代・專業">
+          </label>
+          <label>副標題
+            <input id="inSub" type="text" maxlength="40" value="一個畫面，只講一個重點">
+          </label>
+          <div class="field">
+            <span>尺寸</span>
+            <div class="seg" id="segFormat">
+              <button type="button" data-ratio="16/9" data-w="1920" data-h="1080" aria-pressed="true">橫式</button>
+              <button type="button" data-ratio="9/16" data-w="1080" data-h="1920" aria-pressed="false">直式</button>
+              <button type="button" data-ratio="1/1" data-w="1080" data-h="1080" aria-pressed="false">方形</button>
+            </div>
+          </div>
+          <div class="field">
+            <span>重點色</span>
+            <div class="colors" id="segColor">
+              <button type="button" style="background:#2563EB" data-color="#2563EB" aria-label="主色" aria-pressed="true"></button>
+              <button type="button" style="background:#F59E0B" data-color="#F59E0B" aria-label="輔助色" aria-pressed="false"></button>
+              <button type="button" style="background:#10B981" data-color="#10B981" aria-label="強調色" aria-pressed="false"></button>
+            </div>
+          </div>
+          <div class="actions">
+            <button type="button" class="btn" id="btnPlay">▶ 重播動畫</button>
+            <button type="button" class="btn primary" id="btnDownload">下載圖片</button>
+          </div>
         </div>
-        <div class="bar"></div>
+        <div class="stage-wrap">
+          <div class="stage" id="stage" role="img" aria-label="影片開場畫面預覽">
+            <div class="safe">
+              <div class="title" id="outTitle">簡潔・現代・專業</div>
+              <div class="sub" id="outSub">一個畫面，只講一個重點</div>
+            </div>
+            <div class="bar" id="outBar"></div>
+          </div>
+          <p class="note" id="sizeNote">1920×1080 · 30 fps</p>
+        </div>
       </div>
-      <p class="note">這段是用網頁模擬的開場效果：平順淡入加上位移，不過度彈跳。</p>
     </section>
 
     <section id="colors">
@@ -152,5 +225,128 @@
 
     <footer>以 Remotion 製作 · 原始碼放在這個 GitHub 儲存庫</footer>
   </div>
+
+<script>
+(() => {
+  const $ = (id) => document.getElementById(id);
+  const inTitle = $("inTitle"), inSub = $("inSub");
+  const stage = $("stage"), outTitle = $("outTitle"), outSub = $("outSub"), outBar = $("outBar");
+  const state = { w: 1920, h: 1080, color: "#2563EB" };
+
+  // 輸入文字 → 即時更新預覽
+  const syncText = () => {
+    outTitle.textContent = inTitle.value || " ";
+    outSub.textContent = inSub.value || " ";
+  };
+  inTitle.addEventListener("input", syncText);
+  inSub.addEventListener("input", syncText);
+
+  // 單選按鈕群組
+  const pick = (group, btn) => {
+    group.querySelectorAll("button").forEach((b) => b.setAttribute("aria-pressed", String(b === btn)));
+  };
+
+  // 尺寸
+  $("segFormat").addEventListener("click", (e) => {
+    const btn = e.target.closest("button");
+    if (!btn) return;
+    pick(e.currentTarget, btn);
+    state.w = +btn.dataset.w;
+    state.h = +btn.dataset.h;
+    stage.style.aspectRatio = btn.dataset.ratio;
+    stage.style.maxWidth = state.h > state.w ? "320px" : state.h === state.w ? "460px" : "";
+    stage.classList.toggle("tall", state.h > state.w);
+    stage.classList.toggle("square", state.h === state.w);
+    $("sizeNote").textContent = `${state.w}×${state.h} · 30 fps`;
+    replay();
+  });
+
+  // 重點色
+  $("segColor").addEventListener("click", (e) => {
+    const btn = e.target.closest("button");
+    if (!btn) return;
+    pick(e.currentTarget, btn);
+    state.color = btn.dataset.color;
+    document.documentElement.style.setProperty("--accent-color", state.color);
+  });
+
+  // 重播動畫
+  const replay = () => {
+    [outTitle, outSub, outBar].forEach((el) => {
+      el.style.animation = "none";
+      void el.offsetWidth;
+      el.style.animation = "";
+    });
+  };
+  $("btnPlay").addEventListener("click", replay);
+
+  // 下載圖片：用 canvas 以實際解析度畫出開場畫面
+  const wrapLines = (ctx, text, maxWidth) => {
+    const lines = [];
+    let line = "";
+    for (const ch of text) {
+      if (ctx.measureText(line + ch).width > maxWidth && line) {
+        lines.push(line);
+        line = ch;
+      } else {
+        line += ch;
+      }
+    }
+    if (line) lines.push(line);
+    return lines;
+  };
+
+  $("btnDownload").addEventListener("click", () => {
+    const { w, h, color } = state;
+    const canvas = document.createElement("canvas");
+    canvas.width = w;
+    canvas.height = h;
+    const ctx = canvas.getContext("2d");
+    const font = getComputedStyle(document.body).fontFamily;
+    const tall = h > w, square = h === w;
+    const titleSize = Math.round(w * (tall ? 0.10 : square ? 0.08 : 0.062));
+    const subSize = Math.round(w * (tall ? 0.046 : square ? 0.036 : 0.026));
+    const maxText = w - 96 * 2; // 安全邊距 96px
+
+    ctx.fillStyle = "#0F172A";
+    ctx.fillRect(0, 0, w, h);
+    ctx.textAlign = "center";
+    ctx.textBaseline = "middle";
+
+    ctx.font = `700 ${titleSize}px ${font}`;
+    const tLines = wrapLines(ctx, inTitle.value, maxText);
+    ctx.font = `400 ${subSize}px ${font}`;
+    const sLines = wrapLines(ctx, inSub.value, maxText);
+
+    const tLH = titleSize * 1.25, sLH = subSize * 1.5;
+    const barGap = w * 0.024, barH = w * 0.008, barW = w * 0.12;
+    const total = tLines.length * tLH + barGap * 2 + barH + sLines.length * sLH;
+    let y = (h - total) / 2;
+
+    ctx.fillStyle = "#F8FAFC";
+    ctx.font = `700 ${titleSize}px ${font}`;
+    tLines.forEach((l) => { ctx.fillText(l, w / 2, y + tLH / 2); y += tLH; });
+
+    y += barGap;
+    ctx.fillStyle = color;
+    ctx.beginPath();
+    ctx.roundRect ? ctx.roundRect(w / 2 - barW / 2, y, barW, barH, barH / 2) : ctx.rect(w / 2 - barW / 2, y, barW, barH);
+    ctx.fill();
+    y += barH + barGap;
+
+    ctx.fillStyle = "#94A3B8";
+    ctx.font = `400 ${subSize}px ${font}`;
+    sLines.forEach((l) => { ctx.fillText(l, w / 2, y + sLH / 2); y += sLH; });
+
+    ctx.fillStyle = color;
+    ctx.fillRect(0, h - 8, w, 8);
+
+    const a = document.createElement("a");
+    a.download = `title-card-${w}x${h}.png`;
+    a.href = canvas.toDataURL("image/png");
+    a.click();
+  });
+})();
+</script>
 </body>
 </html>
