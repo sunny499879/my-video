@@ -1,0 +1,156 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>我的影片專案</title>
+<meta name="description" content="用 Remotion 製作影片的品牌設定與作品展示">
+<style>
+  :root {
+    --primary: #2563EB;
+    --secondary: #F59E0B;
+    --accent: #10B981;
+    --bg: #0F172A;
+    --surface: #1E293B;
+    --text: #F8FAFC;
+    --muted: #94A3B8;
+    --radius: 16px;
+    --font: "Noto Sans TC", "Microsoft JhengHei", "PingFang TC", system-ui, sans-serif;
+  }
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--font);
+    line-height: 1.7;
+  }
+  .wrap { max-width: 960px; margin: 0 auto; padding: 0 16px; }
+
+  header { padding: 72px 0 40px; }
+  .eyebrow { color: var(--secondary); font-weight: 700; letter-spacing: .12em; font-size: 14px; }
+  h1 { font-size: clamp(36px, 7vw, 64px); line-height: 1.15; margin: 8px 0 16px; }
+  h1 span { color: var(--primary); }
+  .lead { color: var(--muted); font-size: 18px; max-width: 36em; margin: 0; }
+
+  nav { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 28px; }
+  nav a {
+    color: var(--text); text-decoration: none; font-size: 15px;
+    padding: 8px 16px; border-radius: 999px; background: var(--surface);
+  }
+  nav a:hover { background: var(--primary); }
+
+  section { padding: 40px 0; }
+  h2 { font-size: 26px; margin: 0 0 20px; }
+
+  /* 動畫預覽：模擬影片開場 */
+  .stage {
+    position: relative; aspect-ratio: 16 / 9; border-radius: var(--radius);
+    background: var(--bg); border: 1px solid var(--surface);
+    overflow: hidden; display: grid; place-items: center; text-align: center;
+  }
+  .stage .bar {
+    position: absolute; left: 0; bottom: 0; height: 4px; background: var(--primary);
+    animation: progress 6s linear infinite;
+  }
+  .stage .title {
+    font-size: clamp(24px, 6vw, 56px); font-weight: 700; opacity: 0;
+    animation: rise 6s ease-out infinite;
+  }
+  .stage .sub {
+    color: var(--muted); font-size: clamp(14px, 2.4vw, 22px); opacity: 0;
+    animation: rise 6s ease-out .4s infinite;
+  }
+  .stage .dot { color: var(--secondary); }
+  @keyframes rise {
+    0% { opacity: 0; transform: translateY(24px); }
+    12%, 80% { opacity: 1; transform: translateY(0); }
+    92%, 100% { opacity: 0; transform: translateY(0); }
+  }
+  @keyframes progress { from { width: 0; } to { width: 100%; } }
+  @media (prefers-reduced-motion: reduce) {
+    .stage .title, .stage .sub { animation: none; opacity: 1; }
+    .stage .bar { animation: none; width: 100%; }
+  }
+  .note { color: var(--muted); font-size: 14px; margin-top: 12px; }
+
+  /* 顏色 */
+  .swatches { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 12px; }
+  .swatch { background: var(--surface); border-radius: var(--radius); overflow: hidden; }
+  .swatch .chip { height: 72px; }
+  .swatch .meta { padding: 10px 14px; font-size: 14px; }
+  .swatch .meta b { display: block; }
+  .swatch .meta code { color: var(--muted); }
+
+  /* 卡片 */
+  .cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 12px; }
+  .card { background: var(--surface); border-radius: var(--radius); padding: 20px; }
+  .card h3 { margin: 0 0 4px; font-size: 18px; }
+  .card p { margin: 0; color: var(--muted); font-size: 15px; }
+  .ratio { background: var(--bg); border: 2px solid var(--primary); border-radius: 6px; margin-bottom: 14px; }
+
+  footer { padding: 40px 0 64px; color: var(--muted); font-size: 14px; border-top: 1px solid var(--surface); margin-top: 24px; }
+</style>
+</head>
+<body>
+  <div class="wrap">
+    <header>
+      <div class="eyebrow">REMOTION 影片專案</div>
+      <h1>用程式碼<span>做影片</span></h1>
+      <p class="lead">這是我用 Remotion 製作影片的專案。所有影片共用同一套品牌設定，包括顏色、字體、間距和動畫節奏，維持一致的風格。</p>
+      <nav>
+        <a href="#preview">動畫預覽</a>
+        <a href="#colors">品牌顏色</a>
+        <a href="#formats">輸出格式</a>
+        <a href="#style">風格規則</a>
+      </nav>
+    </header>
+
+    <section id="preview">
+      <h2>動畫預覽</h2>
+      <div class="stage" role="img" aria-label="影片開場動畫預覽">
+        <div>
+          <div class="title">簡潔<span class="dot">・</span>現代<span class="dot">・</span>專業</div>
+          <div class="sub">一個畫面，只講一個重點</div>
+        </div>
+        <div class="bar"></div>
+      </div>
+      <p class="note">這段是用網頁模擬的開場效果：平順淡入加上位移，不過度彈跳。</p>
+    </section>
+
+    <section id="colors">
+      <h2>品牌顏色</h2>
+      <div class="swatches">
+        <div class="swatch"><div class="chip" style="background:#2563EB"></div><div class="meta"><b>主色</b><code>#2563EB</code></div></div>
+        <div class="swatch"><div class="chip" style="background:#F59E0B"></div><div class="meta"><b>輔助色</b><code>#F59E0B</code></div></div>
+        <div class="swatch"><div class="chip" style="background:#10B981"></div><div class="meta"><b>強調色</b><code>#10B981</code></div></div>
+        <div class="swatch"><div class="chip" style="background:#0F172A;border-bottom:1px solid #334155"></div><div class="meta"><b>背景</b><code>#0F172A</code></div></div>
+        <div class="swatch"><div class="chip" style="background:#F8FAFC"></div><div class="meta"><b>文字</b><code>#F8FAFC</code></div></div>
+      </div>
+    </section>
+
+    <section id="formats">
+      <h2>輸出格式</h2>
+      <div class="cards">
+        <div class="card"><div class="ratio" style="aspect-ratio:16/9"></div><h3>橫式 1920×1080</h3><p>YouTube、簡報</p></div>
+        <div class="card"><div class="ratio" style="aspect-ratio:9/16;max-width:90px"></div><h3>直式 1080×1920</h3><p>Reels、Shorts、TikTok</p></div>
+        <div class="card"><div class="ratio" style="aspect-ratio:1/1;max-width:140px"></div><h3>方形 1080×1080</h3><p>社群貼文</p></div>
+      </div>
+      <p class="note">全部 30 fps，輸出成 MP4（H.264）。</p>
+    </section>
+
+    <section id="style">
+      <h2>風格規則</h2>
+      <div class="cards">
+        <div class="card"><h3>安全邊距</h3><p>文字與 Logo 保持在畫面邊緣 96px 以內。</p></div>
+        <div class="card"><h3>大量留白</h3><p>置中或靠左對齊，一次只呈現一個重點。</p></div>
+        <div class="card"><h3>平順動畫</h3><p>元素進場約 20 格，退場約 15 格，避免旋轉與過度彈跳。</p></div>
+        <div class="card"><h3>片尾 Logo</h3><p>每支影片結尾都會顯示主要 Logo。</p></div>
+      </div>
+    </section>
+
+    <footer>以 Remotion 製作 · 原始碼放在這個 GitHub 儲存庫</footer>
+  </div>
+</body>
+</html>
